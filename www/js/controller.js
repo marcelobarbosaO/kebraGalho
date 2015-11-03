@@ -3,7 +3,7 @@
 
 angular.module('starter.controllers', [])
 
-        .controller('AppCtrl', function ($scope, $state,$timeout) {
+        .controller('AppCtrl', function ($scope, $state,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         $cordovaOauth, $localStorage, $ionicModal, $ionicPopover, $timeout, Auth) {
                 // Form data for the login modal
                 $scope.loginData = {};
                 $scope.idUSER = "";
@@ -18,13 +18,199 @@ angular.module('starter.controllers', [])
                 $scope.lista = [];
                 $scope.hasHeaderFabRight = false;
 
+                var navIcons = document.getElementsByClassName('ion-navicon');
+                for (var i = 0; i < navIcons.length; i++) {
+                        navIcons.addEventListener('click', function () {
+                                this.classList.toggle('active');
+                        });
+                }
+
+                $scope.setDados = function (id, nome, imagem, estado, cidade, bairro) {
+                        $scope.idUSER = id;
+                        $scope.nomeUser = nome;
+                        $scope.imgUser = imagem;
+                        $scope.estadoUser = estado;
+                        $scope.cidadeUser = cidade;
+                        $scope.bairroUser = bairro;
+                };
+
+                $scope.auth = function (local) {
+                        if ($localStorage.length > 0) {
+                                $scope.tipoLogin = $localStorage.tipoLogin;
+                                $scope.idUSER = $localStorage.id;
+                                $scope.idFACEBOOK = $localStorage.idfacebook;
+                                $scope.imgUser = $localStorage.img;
+                                $scope.nomeUser = $localStorage.nome;
+                                $scope.estadoUser = $localStorage.estado;
+                                $scope.cidadeUser = $localStorage.cidade;
+                                $scope.bairroUser = $localStorage.bairro;
+                                if(local == 'login'){
+                                        $state.go('app.feed');
+                                }
+                        } else {
+                                console.log("deslogou");
+                        }
+                };
+
+                /////////////////////////////////////////
+                // Layout Methods   ////////////////////
+                ////////////////////////////////////////
+
+                $scope.hideNavBar = function () {
+                        document.getElementsByTagName('ion-nav-bar')[0].style.display = 'none';
+                };
+
+                $scope.showNavBar = function () {
+                        document.getElementsByTagName('ion-nav-bar')[0].style.display = 'block';
+                };
+
+                $scope.noHeader = function () {
+                        var content = document.getElementsByTagName('ion-content');
+                        for (var i = 0; i < content.length; i++) {
+                                if (content[i].classList.contains('has-header')) {
+                                        content[i].classList.toggle('has-header');
+                                }
+                        }
+                };
+
+                $scope.setExpanded = function (bool) {
+                        $scope.isExpanded = bool;
+                };
+
+                $scope.setHeaderFab = function (location) {
+                        var hasHeaderFabLeft = false;
+                        var hasHeaderFabRight = false;
+
+                        switch (location) {
+                                case 'left':
+                                        hasHeaderFabLeft = true;
+                                        break;
+                                case 'right':
+                                        hasHeaderFabRight = true;
+                                        break;
+                        }
+
+                        $scope.hasHeaderFabLeft = hasHeaderFabLeft;
+                        $scope.hasHeaderFabRight = hasHeaderFabRight;
+                };
+
+                $scope.hasHeader = function () {
+                        var content = document.getElementsByTagName('ion-content');
+                        for (var i = 0; i < content.length; i++) {
+                                if (!content[i].classList.contains('has-header')) {
+                                        content[i].classList.toggle('has-header');
+                                }
+                        }
+
+                };
+
+                $scope.hideHeader = function () {
+                        $scope.hideNavBar();
+                        $scope.noHeader();
+                };
+
+                $scope.showHeader = function () {
+                        $scope.showNavBar();
+                        $scope.hasHeader();
+                };
+
+                $scope.clearFabs = function () {
+                        var fabs = document.getElementsByClassName('button-fab');
+                        if (fabs.length && fabs.length > 1) {
+                                fabs[0].remove();
+                        }
+                };
         })
 
-        .controller('LoginCtrl', function ($scope,$log, $timeout, $http, $state, $stateParams) {
+        .factory('Auth', function ($firebaseAuth) {
+                var endPoint = "https://kebragalho.firebaseio.com/users";
+                var usersRef = new Firebase(endPoint);
+
+                return $firebaseAuth(usersRef);
+        })
+
+        .controller('LoginCtrl', function ($localStorage, $scope, $cordovaOauth, $log, $timeout, $http, $state, $stateParams, $ionicLoading, $ionicPopup, $ionicSideMenuDelegate, Auth, ionicMaterialInk, ionicMaterialMotion) {
                 var self = this;
+                $scope.$parent.clearFabs();
                 $scope.loginData = {};
                 $scope.msg = "";
+                $ionicSideMenuDelegate.canDragContent(false);
 
+                $scope.$parent.auth('login');//autentica o usuario
+
+                // Confirm
+                $scope.showPopup = function () {
+                        var alertPopup = $ionicPopup.alert({
+                                title: 'Alerta',
+                                template: $scope.msg
+                        });
+
+                        $timeout(function () {
+                                ionicMaterialInk.displayEffect();
+                        }, 0);
+                };
+
+                $scope.loading = function () {
+                        $ionicLoading.show({
+                                template: '<div class="loader"><svg class="circular"><circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/></svg></div>'
+                        });
+                };
+
+                $timeout(function () {
+                        $scope.$parent.hideHeader();
+                }, 0);
+
+                /*****************************  EFEITOS LOGIN ****************************************/
+
+                /*****************************  FACEBOOK LOGIN ****************************************/
+                $scope.cadOrGetData = function(id, nome, imagem){
+                        $http.get("http://servidorteste.tvnoar.tv/quebra/public_html/checkUserFacebook/" + id + "/" + nome + "/" + imagem, {'params': 'params'})
+                        .success(function (response) {
+                                if(response.status == 0){//0 = cadastrado novo usuario facebook
+                                        $localStorage['id'] = response.id;
+                                        $state.go('app.editPerfil');//ir para tela de preenchimento de dados (email, bairro etc);
+                                } else {
+                                        $localStorage['estado'] = response.estado;
+                                        $localStorage['cidade'] = response.cidade;
+                                        $localStorage['bairro'] = response.bairro;
+
+                                        $state.go('app.feed');
+                                }
+                        });
+                };
+
+                Auth.$onAuth(function (authData) {
+                        if (authData == null) {
+                                console.log("usuario nao autenticado");
+                        } else {
+                                console.log("autenticado");
+                                console.log(authData);
+                                $localStorage['nome'] = authData.facebook.displayName;
+                                $localStorage['img'] = authData.facebook.profileImageURL;
+                                $localStorage['idfacebook'] = authData.facebook.id;
+                                $localStorage['tipoLogin'] = 2;//login com facebook
+
+                                $scope.cadOrGetData(authData.facebook.id, authData.facebook.displayName, authData.facebook.profileImageURL);//verifica se o cara ja tem cadastro, senao joga ela pra index.
+                        }
+                });
+
+                $scope.login = function (authMethod) {
+                        Auth.$authWithOAuthRedirect(authMethod).then(function (authData) {
+
+                        }).catch(function (error) {
+                                if (error.code === 'TRANSPORT_UNAVAILABLE') {
+                                        Auth.$authWithOAuthPopup(authMethod).then(function (authData) {
+                                        });
+                                } else {
+                                        console.log(error);
+                                }
+                        });
+                        //  facebookLogin(window.cordovaOauth, window.http);
+                };
+
+
+
+                /*****************************  FROM LOGIN ****************************************/
                 var username, senha;
 
                 $scope.doLogin = function () {
@@ -44,25 +230,45 @@ angular.module('starter.controllers', [])
                                         .success(function (response) {
                                                 //fazer verificacao do usuario se existiu ou nao no bd e deixa variavel global definida
                                                 if (response.status == 0) {
+                                                        $scope.$parent.setDados(response.id, response.nome, response.img, response.estado, response.cidade, response.bairro);
+                                                        sessionStorage.setItem('userLogado', response); //objeto de
+                                                        $localStorage['nome'] = response.nome;
+                                                        $localStorage['id'] = response.id;
+                                                        $localStorage['img'] = response.img;
+                                                        $localStorage['estado'] = response.estado;
+                                                        $localStorage['cidade'] = response.cidade;
+                                                        $localStorage['bairro'] = response.bairro;
+                                                        $localStorage['tipoLogin'] = 1;//login por email e senha.
+                                                        $ionicLoading.hide();
                                                         $state.go("app.feed");
                                                 } else if (response.status == 1) {
+                                                        $ionicLoading.hide();
                                                         $scope.msg = "Não existe usuário com esse email.";
+                                                        $scope.showPopup();
                                                 } else if (response.status == 2) {
-
+                                                        $ionicLoading.hide();
                                                         $scope.msg = "Houve um erro ao se comunicar com o servidor.";
-
+                                                        $scope.showPopup();
                                                 } else if (response.status == 3) {
-
+                                                        $ionicLoading.hide();
                                                         $scope.msg = "Senha esta incorreta.";
-
+                                                        $scope.showPopup();
                                                 }
                                         });
                         }
                 };
+
+                ionicMaterialInk.displayEffect();
         })
 
         .controller('ProfileCtrl', function ($scope, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk) {
                 // Set Header
+                $scope.$parent.showHeader();
+                $scope.$parent.clearFabs();
+                $scope.isExpanded = false;
+                $scope.$parent.setExpanded(false);
+                $scope.$parent.setHeaderFab(false);
+
                 $scope.$parent.auth();//autentica o usuario
 
                 // Set Motion
