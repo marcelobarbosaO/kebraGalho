@@ -1,0 +1,34 @@
+<ion-view view-title="Login" align-title="left">
+        <ion-content class="animate-pan-in-left" style="background: url('img/bg-clouds.png') center; background-size: cover;">
+                <div class="hero no-header flat">
+                        <div class="content">
+                                <div class="app-icon"></div>
+                                <h1>Kebra Galho</h1>
+                        </div>
+                </div>
+                <form ng-submit="doLogin()" id="formlogin">
+                        <div class="list">
+                                <ion-md-input placeholder="Email" ng-model="loginData.user" highlight-color="balanced" type="text"></ion-md-input>
+                                <ion-md-input placeholder="Senha" highlight-color="energized" ng-model="loginData.senha" type="password"></ion-md-input>
+                        </div>
+                        <div class="padding">
+                                <div class="row">                                        
+                                        <div class="col">
+                                                <button class="button button-full button-assertive ink icon-right ion-android-send" type="submit">Entrar</button>
+                                        </div>
+                                        <div class="col">
+                                                <button ui-sref="app.cadastro" class="button button-full button-assertive ink icon-right ion-clipboard">Cadastrar</button>
+                                        </div>
+                                </div>
+                                <!--<button ui-sref="app.profile" class="button button-full button-assertive ink">Login</button>-->
+                        </div>
+                </form>
+                <div class="button-bar social-login">
+                        <!--<button class="button button-small button-border icon-left ion-social-google button-assertive-900">Google+</button>
+                        <button class="button button-small button-border icon-left ion-social-twitter button-calm-900">Twitter</button>-->
+                        <button class="button button-small button-border icon-left ion-social-facebook button-positive-900" ng-click="login('facebook')">Facebook</button>
+                </div>
+        </ion-content>
+</ion-view>
+
+

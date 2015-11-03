@@ -1,0 +1,38 @@
+<ion-view view-title="Perfil do {{dados[0].nome}}">
+            <ion-content ng-class="{expanded:$scope.isExpanded}">
+                        <div class="hero slide-up" style="background-image: url('img/profile-bg.jpg');">
+                                    <div class="content">
+                                        <div class="avatar" ng-if="dados[0].thumb == '' || dados[0].thumb == null || dados[0].thumb == undefined" style="background-image: url('img/profile-bg.jpg');"></div>
+                                        <div class="avatar" ng-if="dados[0].thumb != '' && dados[0].thumb != null && dados[0].thumb != undefined" style="background-image: url('{{dados[0].thumb}}');"></div>
+                                        <h3><a class="light">{{dados[0].nome}}</a></h3>
+                                        <h4>descricao ou algo do genero</h4>
+                                    </div>
+                        </div>
+                        <div class="tabs tabs-dark tabs-icon-top static">
+                                    <a class="tab-item" ng-click="actionSheet();">
+                                        <i class="icon ion-android-star"></i> Recomendar
+                                    </a>
+                        </div>
+                        <h4 class="content padding double-padding-x">Dados deste Quebra Galho</h4>
+                        <div class="list animate-fade-slide-in-right">
+                                    <a ui-sref="app.friends" class="item item-icon-left">
+                                                <i class="icon ion-android-call"></i>
+                                                <h2>Telefone</h2>
+                                                <p>{{dados[0].telefone}}</p>
+                                                <!--<i class="icon ion-chatbubble muted"></i>-->
+                                    </a>
+                                    <a ui-sref="app.friends" class="item item-icon-left">
+                                                <i class="icon ion-android-drafts"></i>
+                                                <h2>E-mail</h2>
+                                                <p>{{dados[0].email}}</p>
+                                                <!--<i class="icon ion-chatbubble muted"></i>-->
+                                    </a>
+                                    <a ui-sref="app.friends" class="item item-icon-left">
+                                                <i class="icon ion-ios-redo"></i>
+                                                <h2>Galhos Quebrados</h2>
+                                                <p id="recomend">{{dados[0].recomendacoes}} galhos</p>
+                                                <!--<i class="icon ion-chatbubble muted"></i>-->
+                                    </a>
+                                </div>
+            </ion-content>
+</ion-view>

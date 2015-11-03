@@ -1,0 +1,64 @@
+<ion-view view-title="Cadastre-se no Kebra Galho">
+        <ion-content ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+                <form ng-submit="doCadastroAlter()" id="formlogin">
+                        <div class="list">
+                                <ion-md-input placeholder="Nome" ng-model="cadData.nome" highlight-color="balanced" type="text"></ion-md-input>
+                                <ion-md-input placeholder="Email" ng-model="cadData.email" highlight-color="balanced" type="text"></ion-md-input>
+                                <ion-md-input placeholder="Senha" highlight-color="energized" ng-model="cadData.senha" type="password"></ion-md-input>
+                                <ion-md-input placeholder="Cpf" highlight-color="energized" ng-model="cadData.cpf" type="text"></ion-md-input>
+                                <ion-md-input placeholder="Telefone" highlight-color="energized" ng-model="cadData.telefone" type="text"></ion-md-input>
+                                <div class="list" style="margin-top: 20px;">
+                                        <label class="item item-input item-select">
+                                                <div class="input-label">
+                                                        Estado
+                                                </div>
+                                                <select ng-options="option.nome for option in estados" 
+                                                        ng-model="selectedItemE"
+                                                        ng-change="cidadeFunc(selectedItemE);">
+                                                </select>
+                                                <!--<select id="estados">
+                                                        <option>Escolha um estado</option>
+                                                        <option value="{{est.id}}" ng-model="cadData.estado" ng-repeat="est in estados">{{est.nome}}</option>
+                                                </select>-->
+                                        </label>
+                                        <label class="item item-input item-select">
+                                                <div class="input-label">
+                                                        Cidade
+                                                </div>
+                                                <select ng-options="option.nome for option in cidades" 
+                                                        ng-model="selectedItemC"
+                                                        ng-change="bairroFunc(selectedItemC);">
+                                                </select>
+                                                <!--<select id="cidades">
+                                                        <option>Escolha um estado primeiro</option>
+                                                </select>-->
+                                        </label>
+                                        <label class="item item-input item-select">
+                                                <div class="input-label">
+                                                        Bairro
+                                                </div>
+                                                <select ng-if="bairros.length > 0" ng-options="bar.nome for bar in bairros" ng-model="selectedItemB" ng-change="selectBairro(selectedItemB)">
+                                                </select>
+                                                <select ng-if="cidades.length == 0 && bairros.length == 0">
+                                                        <option>Escolha uma cidade e estado primeiro</option>
+                                                </select>
+                                                <select ng-if="cidades.length > 0 && bairros.length == 0">
+                                                        <option>Não existem bairros para essa cidade ainda</option>
+                                                </select>
+                                                <!--<select id="bairros">
+                                                        <option>Escolha um estado e cidade primeiro</option>
+                                                </select>-->
+                                        </label>
+                                </div>
+                        </div>
+                        <div class="padding">
+                                <button  class="button button-full button-assertive ink icon-right ion-android-send" type="submit">Entrar</button>
+                                <!--<button ui-sref="app.profile" class="button button-full button-assertive ink">Login</button>-->
+                        </div>
+                </form>
+        </ion-content>
+        <style>
+                .item-md-label .input-label {color:#000 !important}
+                .bar .title{ text-align: center !important; left: 0px !important;}
+        </style>
+</ion-view>

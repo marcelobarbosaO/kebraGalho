@@ -1,0 +1,20 @@
+<ion-view view-title="Kebra Galhos perto de você" hide-back-button="{{hideBackButton}}">
+        <ion-content ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+                <div class="item card-item" ng-repeat="user in lista track by user.id">
+                        <div ui-sref="app.user({ feedId:  user.id })" class="card stable-bg ink ink-dark">
+                                <div class="item item-avatar item-text-wrap">
+                                        <span class="avatar" ng-if="user.thumb == '' || user.thumb == undefined || user.thumb == null" style="background-image: url('img/profile-bg.jpg');"></span>
+                                        <span class="avatar" ng-if="user.thumb != '' || user.thumb != undefined || user.thumb != null" style="background-image: url('{{user.thumb}}');"></span>
+                                        <strong>{{user.nome}}</strong>
+                                        <div class="card-footer text-right">
+                                                <!--<i class="icon ion-chatbubbles positive"></i> {{user.recomendacoes}}-->
+                                                <i class="icon ion-star assertive"></i> {{user.recomendacoes}}
+                                                <div class="pull-left LetraG">
+                                                        <i class="icon ion-clock"></i> {{user.bairro}}
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </ion-content>
+</ion-view>
