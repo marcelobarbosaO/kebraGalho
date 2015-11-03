@@ -226,6 +226,7 @@ angular.module('starter.controllers', [])
                                 $scope.msg = "Campo senha está vazio.";
                                 $scope.showPopup();
                         } else {
+
                                 $http.post("http://servidorteste.tvnoar.tv/quebra/public_html/login", {"username": username, "senha": senha})
                                         .success(function (response) {
                                                 //fazer verificacao do usuario se existiu ou nao no bd e deixa variavel global definida
